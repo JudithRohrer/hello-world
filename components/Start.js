@@ -2,8 +2,7 @@ import React, { Component } from 'react';
 import { StyleSheet, View, Text, Button, TextInput, ImageBackground, TouchableOpacity } from 'react-native';
 
 
-//source for background image
-const image = {uri: "https://i.ibb.co/KrrnVyY/startimage.png"};
+
 
 // Page the user sees when opening the app
 export default class Start extends React.Component {
@@ -16,6 +15,9 @@ export default class Start extends React.Component {
   }
 
   render() {
+
+    //source for background image
+    const image = {uri: "https://i.ibb.co/KrrnVyY/startimage.png"};
 
     return (
       <ImageBackground source={image} style={styles.image}>
@@ -49,12 +51,13 @@ export default class Start extends React.Component {
 
           </View>
 
-          <View style={styles.button}>
-            <Button
-              title="Start Chatting" color="#FFFFFF" onPress={() => this.props.navigation.navigate('Chat', {//so state can be passed to next Screen
-              name: this.state.name, color: this.state.backgroundColor})}
-              />
-          </View>
+
+            <TouchableOpacity
+              style={styles.button} onPress={() => this.props.navigation.navigate('Chat', {//so state can be passed to next Screen
+              name: this.state.name, color: this.state.backgroundColor})}>
+              <Text style={styles.textButton}>Start Chatting</Text>
+            </TouchableOpacity>
+
 
         </View>
       </ImageBackground>
@@ -66,7 +69,6 @@ const styles = StyleSheet.create({
 
   image: {
     flex: 1,
-    resizeMode: 'cover',
     justifyContent: 'center'
   },
 
@@ -74,7 +76,7 @@ const styles = StyleSheet.create({
     flex: 1,
     color: '#FFFFFF',
     fontSize: 45,
-    fontWeight: '600',
+    fontWeight: 'bold',
     alignSelf: 'center',
     marginTop: 44,
   },
@@ -128,9 +130,14 @@ const styles = StyleSheet.create({
     marginBottom: '5%',
     height: '21%',
     alignSelf: 'center',
-    padding: '2%',
+    justifyContent: 'space-around',
   },
-
+  textButton: {
+    color: '#FFFFFF',
+    alignSelf: 'center',
+    fontWeight: 'bold',
+    fontSize: 16
+  },
   color1: {
     backgroundColor: '#090C08',
     width: 40,
