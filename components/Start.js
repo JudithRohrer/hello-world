@@ -17,9 +17,11 @@ export default class Start extends React.Component {
   render() {
 
     //source for background image
-    const image = {uri: "https://i.ibb.co/KrrnVyY/startimage.png"};
+    const image = { uri: "https://i.ibb.co/KrrnVyY/startimage.png" };
 
     return (
+
+
       <ImageBackground source={image} style={styles.image}>
 
           <Text style={styles.title}>App Title</Text>
@@ -61,14 +63,17 @@ export default class Start extends React.Component {
 
         </View>
       </ImageBackground>
+
     )
   }
 };
 
 const styles = StyleSheet.create({
 
+
   image: {
     flex: 1,
+    resizeMode: 'cover',
     justifyContent: 'center'
   },
 
