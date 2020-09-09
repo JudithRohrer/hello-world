@@ -17,7 +17,7 @@ export default class Start extends React.Component {
   render() {
 
     //source for background image
-    const image = { uri: "https://i.ibb.co/KrrnVyY/startimage.png" };
+    const image = require('../assets/background.png');
 
     return (
 
@@ -73,7 +73,7 @@ const styles = StyleSheet.create({
 
   image: {
     flex: 1,
-    resizeMode: 'cover',
+  //  resizeMode: 'cover',
     justifyContent: 'center'
   },
 
