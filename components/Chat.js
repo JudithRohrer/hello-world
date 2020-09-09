@@ -159,9 +159,8 @@ onCollectionUpdate = (querySnapshot) => {
 
   //unable UI send new messages in case the user is offline
   renderInputToolbar(props) {
-    if (this.state.isConnected == false) {
-    } else {
-      return(
+    if (this.state.isConnected) {
+      return (
       <InputToolbar
       {...props}
       />
@@ -184,6 +183,8 @@ onCollectionUpdate = (querySnapshot) => {
       />
     )
   }
+
+
 
 
   render() {
