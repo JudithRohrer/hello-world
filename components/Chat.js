@@ -1,7 +1,11 @@
 import React, { Component } from 'react';
-import { View, Text, StyleSheet, Platform, KeyboardAvoidingView, AsyncStorage } from 'react-native';
+import { View, Text, StyleSheet, Platform, KeyboardAvoidingView, AsyncStorage, Image } from 'react-native';
 import NetInfo from '@react-native-community/netinfo';
 import { GiftedChat, Bubble, InputToolbar } from 'react-native-gifted-chat';
+
+import CustomActions from "./CustomActions";
+
+import MapView from 'react-native-maps';
 
 //import firebase
 const firebase = require('firebase');
@@ -35,27 +39,31 @@ export default class Chat extends React.Component {
       user: {
         _id: '',
         name: '',
+        avatar: ''
       },
+      isConnected: ''
     };
   }
 
   //authenticate the user to see recent messages
   componentDidMount() {
     //check on- or offline status of the user with NetInfo, to let the machine decide where to fetch messages
-    let name = this.props.route.params.name;
-
 
     NetInfo.fetch().then(isConnected => {
       if (isConnected) {
+        this.setState({
+          isConnected: true
+        });
         console.log('online');
-
         this.authUnsubscribe = firebase.auth().onAuthStateChanged(async (user) => {
           if(!user) {
-            await firebase.auth().signInAnonymously();
+              await firebase.auth().signInAnonymously();
           }
-            //update user state with currently active user data
+
+          //update user state with currently active user data
           this.setState({
             uid: user.uid,
+            isConnected: true,
           });
           this.unsubscribe = this.referenceMessages.orderBy('createdAt', 'desc').onSnapshot(this.onCollectionUpdate);
         });
@@ -116,9 +124,11 @@ export default class Chat extends React.Component {
   addMessages() {
    this.referenceMessages.add({
      _id: this.state.messages[0]._id,
-     text: this.state.messages[0].text,
+     text: this.state.messages[0].text || '',
      createdAt: this.state.messages[0].createdAt,
-     user: this.state.messages[0].user
+     user: this.state.messages[0].user,
+     image: this.state.messages[0].image || '',
+     location: this.state.messages[0].location ||''
    });
   }
 
@@ -148,7 +158,9 @@ onCollectionUpdate = (querySnapshot) => {
         _id: data.user._id,
         name: data.user.name,
         avatar: data.user.avatar
-      }
+      },
+      image: data.image || '',
+      location: data.location || ''
     });
   });
   this.setState({
@@ -159,14 +171,11 @@ onCollectionUpdate = (querySnapshot) => {
 
   //unable UI send new messages in case the user is offline
   renderInputToolbar(props) {
-    if (this.state.isConnected) {
-      return (
-      <InputToolbar
-      {...props}
-      />
-      );
+    if (this.state.isConnected === false) {
+    } else {
+        return <InputToolbar {...props} />;
     }
-  }
+  };
 
   renderBubble(props) {
     return (
@@ -185,6 +194,31 @@ onCollectionUpdate = (querySnapshot) => {
   }
 
 
+  renderCustomActions(props) {
+    return <CustomActions {...props} />
+  };
+
+  renderCustomView = (props) => {
+    const { currentMessage } = props;
+    if(currentMessage.location) {
+      return (
+        <MapView
+          style={{width:150,
+            height: 100,
+            borderRadius: 13,
+            margin: 3}}
+          region={{
+            latitude: currentMessage.location.latitude,
+            longitude: currentMessage.location.longitude,
+            latitudeDelta: 0.0922,
+            longitudeDelta: 0.0421,
+          }}
+        />
+      );
+    }
+    return null;
+  };
+
 
 
   render() {
@@ -196,9 +230,25 @@ onCollectionUpdate = (querySnapshot) => {
       //setting View to fullscreen with flex be 1
     <View style={{flex:1, justifyContent: "center", /*color state given from the previous View*/ backgroundColor: this.props.route.params.color}}>
 
+    {this.state.location &&
+      <MapView
+      style={{width: 300, height: 200}}
+      region={{
+        latitude: this.state.location.coords.latitude,
+        longitude: this.state.location.coords.longitude,
+        latitudeDelta: 0.0922,
+        longitudeDelta: 0.0421,
+        }}
+      />}
+
+    {this.state.image &&
+    <Image source={{ uri: this.state.image.uri }} style={{width: 200, height: 200}}/>}
+
       <GiftedChat
         renderBubble={this.renderBubble.bind(this)}
         renderInputToolbar={this.renderInputToolbar.bind(this)}
+        renderActions={this.renderCustomActions}
+        renderCustomView={this.renderCustomView}
         messages={this.state.messages}
         onSend={messages => this.onSend(messages)}
         user={{

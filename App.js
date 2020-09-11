@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import Start from './components/Start';
 import Chat from './components/Chat';
+import CustomActions from './components/CustomActions';
 import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
 // to make multiple page views possible
