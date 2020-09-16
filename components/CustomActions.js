@@ -13,53 +13,63 @@ require("firebase/firestore");
 export default class CustomActions extends React.Component {
 
   pickImage = async () =>  {
-    const { status } = await Permissions.askAsync(Permissions.CAMERA_ROLL);
+    try {
+      const { status } = await Permissions.askAsync(Permissions.CAMERA_ROLL);
 
-    if(status === 'granted') {
-      let result = await ImagePicker.launchImageLibraryAsync({
-        mediaTypes: 'Images',
-      }).catch(error => console.log(error));
+      if(status === 'granted') {
+        const result = await ImagePicker.launchImageLibraryAsync({
+          mediaTypes: 'Images',
+        }).catch(e => console.log(e));
 
-
-      if(!result.cancelled) {
-        let imageUrl = await this.uploadImage(result.uri);
-        this.props.onSend({ image: imageUrl });
+        if(!result.cancelled) {
+          const imageUrl = await this.uploadImage(result.uri);
+          this.props.onSend({ image: imageUrl });
+        }
       }
+    } catch (e) {
+      console.log(e.message);
     }
   };
 
-  takePhoto = async() => {
-    const { status } = await Permissions.askAsync(Permissions.CAMERA_ROLL, Permissions.CAMERA);
+  takePhoto = async () => {
+      try {
+        const { status } = await Permissions.askAsync(Permissions.CAMERA_ROLL, Permissions.CAMERA);
 
-    if(status === 'granted') {
-      let result = await ImagePicker.launchCameraAsync({
-        mediaTypes: 'Images',
-      }).catch(error => console.log(error));
+        if(status === 'granted') {
+          const result = await ImagePicker.launchCameraAsync({
+            mediaTypes: 'Images',
+          }).catch(e => console.log(e));
 
-
-      if(!result.cancelled) {
-        let imageUrl = await this.uploadImage(result.uri);
-        this.props.onSend({ image: imageUrl });
-      }
+          if(!result.cancelled) {
+            const imageUrl = await this.uploadImage(result.uri);
+            this.props.onSend({ image: imageUrl });
+          }
+        }
+     } catch (e) {
+       console.log(e.message);
      }
    };
 
     getLocation = async () => {
-      const { status } = await Permissions.askAsync(Permissions.LOCATION);
+      try {
+        const { status } = await Permissions.askAsync(Permissions.LOCATION);
 
-      if(status === 'granted') {
-        let result = await Location.getCurrentPositionAsync({});
+        if(status === 'granted') {
+          const result = await Location.getCurrentPositionAsync({});
 
-        if(!result.cancelled) {
-          const location = await Location.getCurrentPositionAsync({});
-          console.log(location);
-          this.props.onSend({
-            location: {
-              latitude: location.coords.latitude,
-              longitude: location.coords.longitude,
-            },
-          });
+          if(!result.cancelled) {
+            const location = await Location.getCurrentPositionAsync({});
+            console.log(location);
+            this.props.onSend({
+              location: {
+                latitude: location.coords.latitude,
+                longitude: location.coords.longitude,
+              },
+            });
+          }
         }
+      } catch (e) {
+        console.log(e.message)
       }
     }
 
@@ -71,8 +81,8 @@ export default class CustomActions extends React.Component {
           xhr.onload = () => {
             resolve(xhr.response);
           };
-          xhr.onerror = (error) => {
-            console.log(error);
+          xhr.onerror = (e) => {
+            console.log(e);
             reject(new TypeError('Network Request Failed'));
           };
           xhr.responseType = 'blob';
@@ -87,8 +97,8 @@ export default class CustomActions extends React.Component {
         blob.close();
         const imageURL = await snapshot.ref.getDownloadURL();
         return imageURL;
-      } catch (error) {
-        console.log(error.message);
+      } catch (e) {
+        console.log(e.message);
       }
     };
 
@@ -104,17 +114,21 @@ export default class CustomActions extends React.Component {
         cancelButtonIndex,
       },
       async (buttonIndex) => {
-        switch (buttonIndex) {
-          case 0:
-            console.log('user wants to pick an image');
-            return this.pickImage();
-          case 1:
-            console.log('user wants to take a picture');
-            return this.takePhoto();
-          case 2:
-            console.log('user wants to get their location');
-            return this.getLocation();
-          default:
+        try {
+          switch (buttonIndex) {
+            case 0:
+              console.log('user wants to pick an image');
+              return this.pickImage();
+            case 1:
+              console.log('user wants to take a picture');
+              return this.takePhoto();
+            case 2:
+              console.log('user wants to get their location');
+              return this.getLocation();
+            default:
+          }
+        } catch (e) {
+          console.log(e);
         }
       },
     );

@@ -7,6 +7,12 @@ import CustomActions from "./CustomActions";
 
 import MapView from 'react-native-maps';
 
+// Dealing with yellow banner warnings
+import { YellowBox } from 'react-native';
+YellowBox.ignoreWarnings(['Animated: `useNativeDriver`', 'Animated.event']);
+
+
+
 //import firebase
 const firebase = require('firebase');
 require('firebase/firestore');
@@ -88,40 +94,40 @@ export default class Chat extends React.Component {
 
 
   // fetch messages from AsyncStorage when user is offline
-   async getMessages() {
+  getMessages = async () => {
      let messages = '';
      try {
        messages = (await AsyncStorage.getItem('messages')) || [];
        this.setState({
          messages: JSON.parse(messages)
        });
-     } catch (error) {
-       console.log(error.message);
+     } catch (e) {
+       console.log(e.message);
      }
    };
 
 
   // save messages in AsyncStorage in case user has to use app once offline in the future
-  async saveMessages() {
+  saveMessages = async () => {
     try {
       await AsyncStorage.setItem('messages', JSON.stringify(this.state.messages));
-    } catch (error) {
-      console.log(error.message);
+    } catch (e) {
+      console.log(e.message);
     }
   }
 
-  async deleteMessages() {
+  deleteMessages = async () => {
     try {
       await AsyncStorage.removeItem('messages');
-    } catch (error) {
-      console.log(error.message);
+    } catch (e) {
+      console.log(e.message);
     }
   }
 
 
 
   //pushes messages to firestore database
-  addMessages() {
+  addMessages = () => {
    this.referenceMessages.add({
      _id: this.state.messages[0]._id,
      text: this.state.messages[0].text || '',
@@ -134,7 +140,7 @@ export default class Chat extends React.Component {
 
 
  //send function that keeps all messages visible
-  onSend(messages = []) {
+  onSend = (messages = []) => {
     this.setState(previousState => ({
       messages: GiftedChat.append(previousState.messages, messages),
     }),
@@ -170,14 +176,14 @@ onCollectionUpdate = (querySnapshot) => {
 
 
   //unable UI send new messages in case the user is offline
-  renderInputToolbar(props) {
+  renderInputToolbar = (props) => {
     if (this.state.isConnected === false) {
     } else {
         return <InputToolbar {...props} />;
     }
   };
 
-  renderBubble(props) {
+  renderBubble = (props) => {
     return (
       <Bubble
         {...props}
@@ -194,7 +200,7 @@ onCollectionUpdate = (querySnapshot) => {
   }
 
 
-  renderCustomActions(props) {
+  renderCustomActions = (props) => {
     return <CustomActions {...props} />
   };
 
@@ -222,7 +228,7 @@ onCollectionUpdate = (querySnapshot) => {
 
 
   render() {
-    let name = this.props.route.params.name;
+    const name = this.props.route.params.name;
     this.props.navigation.setOptions({ title: name });
 
 
