@@ -1,80 +1,89 @@
-import React, { Component } from 'react';
-import { StyleSheet, View, Text, Button, TextInput, ImageBackground, TouchableOpacity } from 'react-native';
+/**
+* @description start.js manages the starting screen of the application chat-app
+*/
 
+/**
+* @class Start
+* @requires React
+* @requires React-Native
+*/
 
-
+import React from 'react';
+import {
+  StyleSheet,
+  View,
+  Text,
+  TextInput,
+  ImageBackground,
+  TouchableOpacity,
+} from 'react-native';
 
 // Page the user sees when opening the app
 export default class Start extends React.Component {
   constructor() {
     super();
     this.state = {
-      name: "",
-      backgroundColor: "",
+      name: '',
+      backgroundColor: '',
     };
   }
 
   render() {
-
-    //source for background image
+    /**
+    * @function render
+    * @memberof Start - react class component
+    * @returns ImageBackground
+    * @returns app title
+    * @returns TextInput
+    * @returns TouchableOpacity with background color options
+    */
+    // source for background image
     const image = require('../assets/background.png');
 
     return (
-
-
       <ImageBackground source={image} style={styles.image}>
-
-          <Text style={styles.title}>App Title</Text>
-
+        <Text style={styles.title}>App Title</Text>
         <View style={styles.whiteBox}>
-
             <TextInput
-              style={styles.input}
-              onChangeText={(name) => this.setState({name})}
-              value={this.state.name}
-              placeholder="Your Name ..."
+            style={styles.input}
+            onChangeText={(name) => this.setState({name})}
+            value={this.state.name}
+            placeholder="Your Name ..."
             />
-
             <Text style={styles.text}>Choose a Background Color:</Text>
 
-          <View style={styles.colorChoice}>
+        <View style={styles.colorChoice}>
+          <TouchableOpacity style={styles.color1} onPress={() => this.setState({backgroundColor: "#090C08"})}>
+          </TouchableOpacity>
 
-            <TouchableOpacity style={styles.color1} onPress={() => this.setState({backgroundColor: "#090C08"})}>
-            </TouchableOpacity>
+          <TouchableOpacity style={styles.color2} onPress={() => this.setState({backgroundColor: "#474056"})}>
+          </TouchableOpacity>
 
-            <TouchableOpacity style={styles.color2} onPress={() => this.setState({backgroundColor: "#474056"})}>
-            </TouchableOpacity>
+          <TouchableOpacity style={styles.color3} onPress={() => this.setState({backgroundColor: "#8A95A5"})}>
+          </TouchableOpacity>
 
-            <TouchableOpacity style={styles.color3} onPress={() => this.setState({backgroundColor: "#8A95A5"})}>
-            </TouchableOpacity>
+          <TouchableOpacity style={styles.color4} onPress={() => this.setState({backgroundColor: "#B9C6AE"})}>
+          </TouchableOpacity>
 
-            <TouchableOpacity style={styles.color4} onPress={() => this.setState({backgroundColor: "#B9C6AE"})}>
-            </TouchableOpacity>
+        </View>
 
-          </View>
-
-
-            <TouchableOpacity
-              style={styles.button} onPress={() => this.props.navigation.navigate('Chat', {//so state can be passed to next Screen
-              name: this.state.name, color: this.state.backgroundColor})}>
-              <Text style={styles.textButton}>Start Chatting</Text>
-            </TouchableOpacity>
-
+          <TouchableOpacity style={styles.button} onPress={() => this.props.navigation.navigate('Chat', {//so state can be passed to next Screen
+            name: this.state.name, color: this.state.backgroundColor})}>
+            <Text style={styles.textButton}>Start Chatting</Text>
+          </TouchableOpacity>
 
         </View>
       </ImageBackground>
-
-    )
+    );
   }
-};
+}
 
 const styles = StyleSheet.create({
 
-
   image: {
     flex: 1,
-  //  resizeMode: 'cover',
-    justifyContent: 'center'
+    // resizeMode: 'cover',
+    justifyContent: 'center',
   },
 
   title: {
@@ -108,7 +117,7 @@ const styles = StyleSheet.create({
     marginBottom: '5%',
     paddingLeft: 10,
     marginTop: '5%',
-    alignSelf: 'center'
+    alignSelf: 'center',
   },
 
   text: {
@@ -117,16 +126,16 @@ const styles = StyleSheet.create({
     color: '#757083',
     opacity: 100,
     marginBottom: '2%',
-    marginLeft: '6%'
+    marginLeft: '6%',
   },
 
-  colorChoice:{
+  colorChoice: {
     flex: 4,
     flexDirection: 'row',
     width: '80%',
     justifyContent: 'space-around',
     marginTop: '2%',
-    marginLeft: '3%'
+    marginLeft: '3%',
   },
 
   button: {
@@ -141,33 +150,33 @@ const styles = StyleSheet.create({
     color: '#FFFFFF',
     alignSelf: 'center',
     fontWeight: 'bold',
-    fontSize: 16
+    fontSize: 16,
   },
   color1: {
     backgroundColor: '#090C08',
     width: 40,
     height: 40,
-    borderRadius: 20
+    borderRadius: 20,
   },
 
   color2: {
     backgroundColor: '#474056',
     width: 40,
     height: 40,
-    borderRadius: 20
+    borderRadius: 20,
   },
 
   color3: {
     backgroundColor: '#8A95A5',
     width: 40,
     height: 40,
-    borderRadius: 20
+    borderRadius: 20,
   },
 
   color4: {
     backgroundColor: '#B9C6AE',
     width: 40,
     height: 40,
-    borderRadius: 20
+    borderRadius: 20,
   }
 });
